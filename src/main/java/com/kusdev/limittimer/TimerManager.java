@@ -20,10 +20,17 @@ public class TimerManager {
     private Map<UUID, TimerData> playerDataMap = new HashMap<>();
 
     public TimerManager(File gameDir) {
+        // Aseguramos que configDir sea una subcarpeta de la raíz del servidor
         File configDir = new File(gameDir, "config");
+
         if (!configDir.exists()) {
-            configDir.mkdirs();
+            boolean created = configDir.mkdirs();
+            if (created) {
+                System.out.println("[LimitTimer] Carpeta config creada exitosamente.");
+            }
         }
+
+        // Al usar el constructor File(parent, child), evitas el error de la barra "/" inicial
         this.saveFile = new File(configDir, "limittimer_players.json");
         loadData();
     }

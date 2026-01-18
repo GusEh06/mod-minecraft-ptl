@@ -25,16 +25,15 @@ public class LimitTimer implements ModInitializer {
     public void onInitialize() {
         // 1. Registro de Comandos
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
+
+
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            // Esta es la forma oficial de Minecraft para obtener la carpeta del server
-            // Funciona en Windows, Linux y Mac sin cambios.
+            // Esta es la clave: obtener la ruta real del servidor en Exaroton
             File baseDir = server.getRunDirectory().toFile();
 
-            // Imprimimos la ruta absoluta para que verifiquemos en la consola dónde quedó
-            System.out.println("[LimitTimer] Carpeta base detectada: " + baseDir.getAbsolutePath());
-
-            this.configManager = new ConfigManager(baseDir);
+            // Pasamos el baseDir para que TimerManager cree ./config/limittimer_players.json
             this.timerManager = new TimerManager(baseDir);
+            this.configManager = new ConfigManager(baseDir);
         });
 
 
