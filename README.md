@@ -46,13 +46,3 @@ El desarrollo sigue buenas prácticas de programación modular:
 * **TimerManager**: Lógica de persistencia y cálculo de acumulación de días.
 * **ScoreboardHandler**: Interfaz visual dinámica para el jugador.
 
----
-
-## Cambios realizados:
-
-1. **Cerré correctamente el bloque de código JSON** que estaba abierto
-2. **Agregué el encabezado faltante** para la sección "Estructura del Proyecto" (## 🏗️)
-3. **Formatée la tabla** de comandos correctamente (los separadores `|` no estaban alineados)
-4. **Reorganicé el formato final** para que el crédito de desarrollo quede más limpio
-
-El documento ahora debería renderizarse correctamente en cualquier visor de Markdown. ¿Hay algo más que te gustaría ajustar?
