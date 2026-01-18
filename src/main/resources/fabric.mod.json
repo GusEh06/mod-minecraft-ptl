@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "limittimer",
+  "version": "${version}",
+  "name": "LimitTimer",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/limittimer/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.kusdev.limittimer.client.LimitTimerDataGenerator"
+    ],
+    "client": [
+      "com.kusdev.limittimer.client.LimitTimerClient"
+    ],
+    "main": [
+      "com.kusdev.limittimer.LimitTimer"
+    ]
+  },
+  "mixins": [
+    "limittimer.mixins.json",
+    {
+      "config": "limittimer.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

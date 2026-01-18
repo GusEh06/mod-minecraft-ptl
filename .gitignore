@@ -1,0 +1,17 @@
+# Gradle temporales
+.gradle/
+build/
+
+# IDE (IntelliJ)
+.idea/
+*.iml
+*.iws
+
+# Minecraft / Run
+run/
+config/
+logs/
+world/
+usercache.json
+whitelist.json
+*.log
