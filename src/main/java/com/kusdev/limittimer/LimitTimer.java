@@ -28,12 +28,14 @@ public class LimitTimer implements ModInitializer {
 
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            // Esta es la clave: obtener la ruta real del servidor en Exaroton
+            // Obtenemos la carpeta donde está el servidor (ej: /home/container/)
             File baseDir = server.getRunDirectory().toFile();
 
-            // Pasamos el baseDir para que TimerManager cree ./config/limittimer_players.json
-            this.timerManager = new TimerManager(baseDir);
+            // IMPORTANTE: Imprimimos para confirmar en el log de Exaroton
+            System.out.println("[LimitTimer] RAÍZ DEL SERVIDOR: " + baseDir.getAbsolutePath());
+
             this.configManager = new ConfigManager(baseDir);
+            this.timerManager = new TimerManager(baseDir);
         });
 
 

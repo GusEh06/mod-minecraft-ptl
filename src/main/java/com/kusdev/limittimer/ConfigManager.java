@@ -11,15 +11,15 @@ public class ConfigManager {
     private ModConfig config;
 
     public ConfigManager(File gameDir) {
-        // Esto nos dirá en la consola de IntelliJ dónde se está intentando crear
+        // Al usar el objeto gameDir, Java sabe que es "dentro" de la carpeta del servidor
         File configDir = new File(gameDir, "config");
-        System.out.println("[LimitTimer] Buscando carpeta de configuración en: " + configDir.getAbsolutePath());
+
+        // Imprimimos para verificar (verás que ya no sale la / sola)
+        System.out.println("[LimitTimer] Buscando en: " + configDir.getAbsolutePath());
 
         if (!configDir.exists()) {
-            boolean created = configDir.mkdirs();
-            System.out.println("[LimitTimer] ¿Se creó la carpeta config?: " + created);
+            configDir.mkdirs();
         }
-
         this.configFile = new File(configDir, "limittimer_config.json");
         loadConfig();
     }

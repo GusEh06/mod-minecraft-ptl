@@ -12,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.nio.file.Path;
 
 public class TimerManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -20,18 +21,18 @@ public class TimerManager {
     private Map<UUID, TimerData> playerDataMap = new HashMap<>();
 
     public TimerManager(File gameDir) {
-        // Aseguramos que configDir sea una subcarpeta de la raíz del servidor
-        File configDir = new File(gameDir, "config");
+        // En lugar de "config/archivo.json", construimos la ruta por piezas
+        Path configPath = gameDir.toPath().resolve("config");
+        File configDir = configPath.toFile();
 
         if (!configDir.exists()) {
-            boolean created = configDir.mkdirs();
-            if (created) {
-                System.out.println("[LimitTimer] Carpeta config creada exitosamente.");
-            }
+            configDir.mkdirs();
         }
 
-        // Al usar el constructor File(parent, child), evitas el error de la barra "/" inicial
-        this.saveFile = new File(configDir, "limittimer_players.json");
+        // Esta forma garantiza que no haya una "/" al inicio que confunda a Linux
+        this.saveFile = configPath.resolve("limittimer_players.json").toFile();
+
+        System.out.println("[LimitTimer] Archivo de datos asignado en: " + saveFile.getPath());
         loadData();
     }
 
