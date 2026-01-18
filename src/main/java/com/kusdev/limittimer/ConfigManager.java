@@ -11,37 +11,56 @@ public class ConfigManager {
     private ModConfig config;
 
     public ConfigManager(File gameDir) {
-        // Al usar el objeto gameDir, Java sabe que es "dentro" de la carpeta del servidor
-        File configDir = new File(gameDir, "config");
+        // Usamos getAbsoluteFile() para asegurarnos de que la ruta sea /server y no una ruta vacía
+        File base = gameDir.getAbsoluteFile();
+        File configDir = new File(base, "config");
 
-        // Imprimimos para verificar (verás que ya no sale la / sola)
+        // Cambiamos getPath() por getAbsolutePath() para ver la verdad en el log
         System.out.println("[LimitTimer] Buscando en: " + configDir.getAbsolutePath());
 
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
+
         this.configFile = new File(configDir, "limittimer_config.json");
         loadConfig();
     }
 
     public void loadConfig() {
-        if (configFile.exists()) {
-            try (FileReader reader = new FileReader(configFile)) {
-                config = GSON.fromJson(reader, ModConfig.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (configFile.exists()) {
+                try (FileReader reader = new FileReader(configFile)) {
+                    this.config = GSON.fromJson(reader, ModConfig.class);
+                    if (this.config == null) throw new Exception("Archivo vacío o corrupto");
+                    System.out.println("[LimitTimer] Configuración cargada desde disco.");
+                }
+            } else {
+                System.out.println("[LimitTimer] Config no encontrada. Generando valores iniciales...");
+                this.config = new ModConfig();
+                saveConfig(); // Esto DEBERÍA crear el archivo ahora
             }
-        } else {
-            config = new ModConfig();
+        } catch (Exception e) {
+            System.err.println("[LimitTimer] Error cargando configuración: " + e.getMessage());
+            this.config = new ModConfig();
             saveConfig();
         }
     }
 
     public void saveConfig() {
-        try (FileWriter writer = new FileWriter(configFile)) {
-            GSON.toJson(config, writer);
+        try {
+            // Aseguramos que la carpeta exista antes de intentar escribir
+            File parent = configFile.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
+
+            try (FileWriter writer = new FileWriter(configFile)) {
+                GSON.toJson(config, writer);
+                writer.flush(); // Obliga al disco a guardar ahora mismo
+                System.out.println("[LimitTimer] ¡ÉXITO! Configuración creada en: " + configFile.getPath());
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("[LimitTimer] ERROR FATAL: " + e.getMessage());
         }
     }
 

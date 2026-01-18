@@ -23,10 +23,6 @@ public class LimitTimer implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // 1. Registro de Comandos
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
-
-
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             // Obtenemos la carpeta donde está el servidor (ej: /home/container/)
             File baseDir = server.getRunDirectory().toFile();
@@ -38,8 +34,11 @@ public class LimitTimer implements ModInitializer {
             this.timerManager = new TimerManager(baseDir);
         });
 
+        //Registro de Comandos
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
 
-        // 3. Guardado preventivo al cerrar
+
+        //Guardado preventivo al cerrar
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             if (timerManager != null) {
                 timerManager.saveData();
@@ -58,6 +57,11 @@ public class LimitTimer implements ModInitializer {
     }
 
     private void actualizarLogicaGlobal(MinecraftServer server) {
+        // Si por alguna razón el servidor tickea antes de que SERVER_STARTING termine:
+        if (configManager == null || configManager.getConfig() == null) {
+            return;
+        }
+
         ModConfig config = configManager.getConfig();
 
         server.getPlayerManager().getPlayerList().forEach(player -> {
